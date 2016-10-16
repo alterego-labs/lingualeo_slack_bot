@@ -18,7 +18,7 @@ defmodule LingualeoGateway.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger],
+    [applications: [:logger, :httpotion, :jsx],
      mod: {LingualeoGateway, []}]
   end
 
@@ -36,6 +36,9 @@ defmodule LingualeoGateway.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [
+      {:httpotion, "~> 3.0.2"},
+      {:exjsx, github: "talentdeficit/exjsx", tag: "v3.1.0"} 
+    ]
   end
 end

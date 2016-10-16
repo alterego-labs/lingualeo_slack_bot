@@ -1,0 +1,5 @@
+%{"exjsx": {:git, "https://github.com/talentdeficit/exjsx.git", "087e01df2457262dcc578d36b68fcdca41860f23", [tag: "v3.1.0"]},
+  "httpotion": {:hex, :httpotion, "3.0.2", "525b9bfeb592c914a61a8ee31fdde3871e1861dfe805f8ee5f711f9f11a93483", [:mix], [{:ibrowse, "~> 4.2", [hex: :ibrowse, optional: false]}]},
+  "ibrowse": {:hex, :ibrowse, "4.2.2", "b32b5bafcc77b7277eff030ed32e1acc3f610c64e9f6aea19822abcadf681b4b", [:rebar3], []},
+  "jsex": {:hex, :jsex, "2.0.0", "d54a39e49418b34b1a78236a92f73e4d7c46329c220275d7223fab4b3dc6120f", [:mix], [{:jsx, "~> 2.0", [hex: :jsx, optional: false]}]},
+  "jsx": {:hex, :jsx, "2.4.0", "fb83830ac15e981b6ce310b645324ceecd01b1e0847d23921c33df829de5d2db", [:mix], []}}
