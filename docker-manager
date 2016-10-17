@@ -1,0 +1,21 @@
+#!/bin/bash
+
+function stop_container {
+  pid=`docker ps -a | grep "lingualeo_slack_bot_container" | cut -d " " -f 1`;
+  if [ -n "$pid" ];
+  then
+    echo "Stopping lingualeo_slack_bot container..."
+    docker rm -f $pid > /dev/null;
+  fi
+}
+
+case "$1" in
+  "build")
+    echo "Started building container for lingualeo_slack_bot application..."
+    docker build -t lingualeo_slack_bot --build-arg SLACK_BOT_TOKEN="$SLACK_BOT_TOKEN" .;;
+  "run")
+    docker run --name lingualeo_slack_bot_container -d -P -i cool_guy;;
+  "stop")
+    stop_container;;
+esac
+
