@@ -1,6 +1,6 @@
 defmodule LingualeoGateway.ApiPoint do
   @moduledoc """
-  Provides an interface for calling LinguaLeo APIs.
+  Provides an worker process for calling LinguaLeo APIs.
 
   This module is a worker, so you must to start it manually or
   add to the supervisor tree (is a recommended way).
