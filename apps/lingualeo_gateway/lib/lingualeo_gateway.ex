@@ -1,8 +1,8 @@
 defmodule LingualeoGateway do
   @moduledoc """
-  Application's main module.
+  LingualeoGateway application's main module.
 
-  Is represented as top level supervisor.
+  This application exposes an interface to communicate with LinguaLeo API.
   """
 
   use Application

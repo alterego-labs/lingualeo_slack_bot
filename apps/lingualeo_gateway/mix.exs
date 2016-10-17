@@ -38,7 +38,7 @@ defmodule LingualeoGateway.Mixfile do
   defp deps do
     [
       {:httpotion, "~> 3.0.2"},
-      {:exjsx, github: "talentdeficit/exjsx", tag: "v3.1.0"} 
+      {:exjsx, "3.2.1"} 
     ]
   end
 end

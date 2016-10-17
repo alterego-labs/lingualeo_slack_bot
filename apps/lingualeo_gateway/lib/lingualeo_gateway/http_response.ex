@@ -1,12 +1,15 @@
 defmodule LingualeoGateway.HttpResponse do
   @moduledoc """
-  
+  Represents a http response struct.
+ 
+  Encapsulates all needed information which can be used in the other layers.
+  Can be built from 3rd party http responses structs, such as HTTPotion library.
   """
 
   defstruct [:response_hash, :cookies, :is_success, :error_msg]
 
   @doc """
-  Builds http response record from a 3rd party one
+  Builds a http response record from a 3rd party one
   """
   def from_3rdparty_response(%HTTPotion.Response{body: json_str, headers: headers}) do
     {:ok, response_hash} = json_str |> JSX.decode([{:labels, :atom}])
