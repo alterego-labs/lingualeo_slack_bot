@@ -48,7 +48,7 @@ defmodule SlackBot.Core.RawIncomeMessage do
   """
   @spec sender(SlackBot.Core.RawIncomeMessage.t) :: Map.t
   def sender(%__MODULE__{message: message} = raw_message) do
-    {:ok, sender_id} = message |> Map.get(:user)
+    {:ok, sender_id} = message |> Map.fetch(:user)
     {:ok, attributes} = raw_message |> slack_users |> Map.fetch(sender_id)
     attributes
   end
@@ -63,11 +63,11 @@ defmodule SlackBot.Core.RawIncomeMessage do
   end
 
   @doc """
-  Retrieves a channel name from which message has been sent
+  Retrieves a channel ID from which message has been sent
   """
   @spec channel(SlackBot.Core.RawIncomeMessage.t) :: String.t
   def channel(%__MODULE__{message: message}) do
-    {:ok, channel_name} = message |> Map.fetch(:channel)
-    channel_name
+    {:ok, channel_id} = message |> Map.fetch(:channel)
+    channel_id
   end
 end
