@@ -1,16 +1,19 @@
 defmodule SlackBot.SlackRtm do
   use Slack
 
+  alias SlackBot.Core.RawIncomeMessage
+
   def handle_connect(slack) do
     IO.puts "Connected as #{slack.me.name}"
   end
 
   def handle_message(message = %{type: "message", user: from_user_id, text: message_text}, slack = %{users: slack_users}) do
-    IO.inspect message
-    IO.inspect slack
-    {:ok, from_user} = slack_users |> Map.fetch(from_user_id)
-    {:ok, from_user_name} = from_user |> Map.fetch(:name)
-    send_message("I've got a message from #{from_user_name}: '#{message_text}'...", message.channel, slack)
+    raw_message = %RawIncomeMessage{message: message, slack: slack}
+    sender = raw_message |> RawIncomeMessage.sender 
+    {:ok, sender_name} = sender |> Map.fetch(:name)
+    message_text = raw_message |> RawIncomeMessage.text
+    channel_name = raw_message |> RawIncomeMessage.channel
+    send_message("I've got a message from #{sender_name}: '#{message_text}'...", channel_name, slack)
   end
   def handle_message(_, _), do: :ok
 
