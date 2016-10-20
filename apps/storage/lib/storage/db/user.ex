@@ -6,7 +6,7 @@ defmodule Storage.DB.User do
   use Ecto.Schema
   import Ecto.Query
 
-  alias Storage.DB.Repo
+  alias Storage.DB.{Repo, WordTraining}
 
   @type t :: %__MODULE__{}
 
@@ -37,5 +37,17 @@ defmodule Storage.DB.User do
   @spec signed_in?(__MODULE__.t) :: boolean
   def signed_in?(%__MODULE__{cookies: cookies} = user) do
     !is_nil(cookies) && cookies != ""
+  end
+
+  @doc """
+  Specifies if user is in training or not
+  """
+  @spec is_in_training?(__MODULE__.t) :: boolean
+  def is_in_training?(%__MODULE__{} = user) do
+    WordTraining
+    |> WordTraining.for_user(user)
+    |> WordTraining.with_in_progress_status
+    |> Repo.aggregate(:count)
+    |> &(&1 > 0)
   end
 end
