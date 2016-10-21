@@ -1,6 +1,6 @@
 defmodule SlackBot.API do
   @moduledoc """
-  
+  Provides a public API of the SlackBot application 
   """
 
   @doc """

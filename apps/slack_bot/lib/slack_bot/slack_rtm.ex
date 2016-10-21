@@ -1,4 +1,8 @@
 defmodule SlackBot.SlackRtm do
+  @moduledoc """
+  Represents a worker which is connected to Slack RTM
+  """
+
   use Slack
 
   alias SlackBot.Core.{IncomeMessage, CurrentUserState}
