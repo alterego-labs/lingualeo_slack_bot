@@ -29,6 +29,12 @@ defmodule SlackBot.Core.IncomeMessageTest do
     {:ok, %{raw_message: raw_message}}
   end
 
+  test "build initializes new struct with a type" do
+    raw_message = IncomeMessage.build(%{text: "Give me a word"}, %{})
+    assert %IncomeMessage{} = raw_message
+    assert raw_message.type == :request_word
+  end
+
   test "slack_users returns list of users", %{raw_message: raw_message} do
     users = IncomeMessage.slack_users(raw_message)
     assert is_map(users)
