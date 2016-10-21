@@ -17,6 +17,8 @@ defmodule Storage.DB.User do
 
     has_many :words, Storage.DB.Word, foreign_key: :user_id
     has_many :word_trainings, Storage.DB.WordTraining, foreign_key: :user_id
+
+    timestamps
   end
 
   @doc """
@@ -44,10 +46,11 @@ defmodule Storage.DB.User do
   """
   @spec is_in_training?(__MODULE__.t) :: boolean
   def is_in_training?(%__MODULE__{} = user) do
-    WordTraining
-    |> WordTraining.for_user(user)
-    |> WordTraining.with_in_progress_status
-    |> Repo.aggregate(:count)
-    |> &(&1 > 0)
+    count = WordTraining
+            |> WordTraining.for_user(user)
+            |> WordTraining.with_in_progress_status
+            |> Repo.all
+            |> Enum.count
+    count > 0
   end
 end

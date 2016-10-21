@@ -14,6 +14,8 @@ defmodule Storage.DB.WordTraining do
 
     belongs_to :user, Storage.DB.User, foreign_key: :user_id
     belongs_to :word, Storage.DB.Word, foreign_key: :word_id
+
+    timestamps
   end
 
   @doc """
@@ -28,7 +30,7 @@ defmodule Storage.DB.WordTraining do
   @doc """
   Scope to filter word trinings by *in_progress* status
   """
-  @spec for_user(Ecto.Queryable.t) :: Ecto.Queryable.t
+  @spec with_in_progress_status(Ecto.Queryable.t) :: Ecto.Queryable.t
   def with_in_progress_status(query) do
     from wt in query,
     where: wt.status == "in_progress"

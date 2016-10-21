@@ -15,5 +15,7 @@ defmodule Storage.DB.Word do
 
     belongs_to :user, Storage.DB.User, foreign_key: :user_id
     has_many :word_trainings, Storage.DB.WordTraining, foreign_key: :word_id
+
+    timestamps
   end
 end

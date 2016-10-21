@@ -9,6 +9,7 @@ defmodule Storage.Mixfile do
      deps_path: "../../deps",
      lockfile: "../../mix.lock",
      elixir: "~> 1.3",
+     elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps]
@@ -38,7 +39,12 @@ defmodule Storage.Mixfile do
   defp deps do
     [
       {:ecto, "2.0.5"},
-      {:mariaex, "0.7.8"}
+      {:mariaex, "0.7.8"},
+      {:ex_machina, "~> 0.6.1", only: :test},
+      {:faker, "~> 0.5", only: :test}
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 end
