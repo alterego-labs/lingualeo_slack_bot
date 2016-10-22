@@ -56,4 +56,16 @@ defmodule SlackBot.Core.IncomeMessageTest do
     channel_id = IncomeMessage.channel(raw_message)
     assert channel_id == "channel_id"
   end
+
+  test "sign_in_credentials when type is not sign in returns error" do
+    income_message = %IncomeMessage{type: :unknown}
+    credentials = income_message |> IncomeMessage.sign_in_credentials
+    assert {:error, _} = credentials
+  end
+
+  test "sign_in_credentials when type is sign in returns credentials from the message text" do
+    income_message = %IncomeMessage{type: :sign_in, message: %{text: "Sign in me by sergeg1990@gmail.com and somepassword"}}
+    credentials = income_message |> IncomeMessage.sign_in_credentials
+    assert {:ok, %{email: "sergeg1990@gmail.com", password: "somepassword"}} = credentials
+  end
 end

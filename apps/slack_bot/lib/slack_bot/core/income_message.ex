@@ -6,6 +6,9 @@ defmodule SlackBot.Core.IncomeMessage do
   defstruct [:message, :slack, :type]
 
   @type t :: %__MODULE__{}
+  @type reason :: String.t
+
+  @sign_in_type_regexp ~r/^Sign in me by (?<email>\w+@[\w\.\-]+) and (?<password>.+)$/
 
   @doc """
   Builds an income message struct using income information about received message and slack
@@ -39,8 +42,8 @@ defmodule SlackBot.Core.IncomeMessage do
   ### Example
 
   ```elixir
-    raw_message = ...
-    SlackBot.Core.IncomeMessage.sender(raw_message)
+    income_message = ...
+    SlackBot.Core.IncomeMessage.sender(income_message)
     # => %{color: "e7392d", deleted: false, id: "kahdalkddas",
     # is_admin: false, is_bot: false, is_owner: false, is_primary_owner: false,
     # is_restricted: false, is_ultra_restricted: false, name: "sergio1990",
@@ -61,9 +64,9 @@ defmodule SlackBot.Core.IncomeMessage do
    ```
   """
   @spec sender(SlackBot.Core.IncomeMessage.t) :: Map.t
-  def sender(%__MODULE__{message: message} = raw_message) do
+  def sender(%__MODULE__{message: message} = income_message) do
     {:ok, sender_id} = message |> Map.fetch(:user)
-    {:ok, attributes} = raw_message |> slack_users |> Map.fetch(sender_id)
+    {:ok, attributes} = income_message |> slack_users |> Map.fetch(sender_id)
     attributes
   end
 
@@ -85,9 +88,21 @@ defmodule SlackBot.Core.IncomeMessage do
     channel_id
   end
 
+  @doc """
+  Fetches from a message text credentials for sign in procedure
+  """
+  @spec sign_in_credentials(SlackBot.Core.IncomeMessage.t) :: {:ok, %{email: String.t, password: String.t}} | {:error, reason}
+  def sign_in_credentials(%__MODULE__{type: type}) when type != :sign_in, do: {:error, "You tried to get credentials from the not sign in message!"}
+  def sign_in_credentials(%__MODULE__{} = income_message) do
+    message_text = income_message |> text
+    captures = Regex.named_captures(@sign_in_type_regexp, message_text)
+                |> Enum.reduce(%{}, fn ({key, val}, acc) -> Map.put(acc, String.to_atom(key), val) end)
+    {:ok, captures}
+  end
+
   defp detect_type(message_text) do
     cond do
-      Regex.match?(~r/^Sign in me by \w+@\w+ and .+$/, message_text) ->
+      Regex.match?(@sign_in_type_regexp, message_text) ->
         :sign_in
       Regex.match?(~r/^Give me a word$/, message_text) ->
         :request_word
