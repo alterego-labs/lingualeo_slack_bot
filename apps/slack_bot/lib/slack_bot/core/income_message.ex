@@ -16,9 +16,11 @@ defmodule SlackBot.Core.IncomeMessage do
   """
   @spec build(Map.t, Map.t) :: __MODULE__.t
   def build(%{text: text} = message, slack) do
-    type = detect_type(text)
+    clear_text = cleanup_text(text)
+    type = detect_type(clear_text)
+    new_message = Map.put(message, :text, clear_text)
     %__MODULE__{
-      message: message,
+      message: new_message,
       slack: slack,
       type: type
     }
@@ -71,6 +73,15 @@ defmodule SlackBot.Core.IncomeMessage do
   end
 
   @doc """
+  Fetches a sender's name
+  """
+  @spec sender_name(SlackBot.Core.IncomeMessage.t) :: String.t
+  def sender_name(%__MODULE__{} = income_message) do
+    sender = income_message |> sender
+    sender.name
+  end
+
+  @doc """
   Retrieves an original message text
   """
   @spec text(SlackBot.Code.IncomeMessage.t) :: String.t
@@ -111,5 +122,9 @@ defmodule SlackBot.Core.IncomeMessage do
       true ->
         :unknown
     end
+  end
+
+  defp cleanup_text(message_text) do
+    Regex.replace(~r/<mailto:.*\|(\w+@[\w\.\-]+)>/, message_text, "\\1")
   end
 end

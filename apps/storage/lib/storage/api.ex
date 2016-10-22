@@ -5,7 +5,7 @@ defmodule Storage.API do
 
   @type user_login :: String.t
 
-  alias Storage.DB.{User}
+  alias Storage.DB.{User, Repo}
 
   @doc """
   Checks is an user with a given login signed in or not
@@ -34,6 +34,29 @@ defmodule Storage.API do
   def user_by_login(user_login) do
     user_login
     |> User.fetch_by_login
+  end
+
+  @doc """
+  Fetches user by login and if such one exists just returns it. Otherwise a new user will be created.
+  """
+  @spec user_by_login_first_or_create(user_login) :: User.t
+  def user_by_login_first_or_create(user_login) do
+    case user_by_login(user_login) do
+      %User{} = user -> user
+      nil ->
+        {:ok, user} = %User{login: user_login} |> Repo.insert
+        user
+    end
+  end
+
+  @doc """
+  Updates an user with a given attributes list
+  """
+  @spec user_update(User.t, Map.t) :: none
+  def user_update(%User{} = user, attributes \\ %{}) do
+    user
+    |> Ecto.Changeset.change(attributes)
+    |> Repo.update
   end
 
   @doc """

@@ -35,6 +35,13 @@ defmodule SlackBot.Core.IncomeMessageTest do
     assert raw_message.type == :request_word
   end
 
+  @tag :wip
+  test "build cleans up a message from mailto" do
+    income_message = IncomeMessage.build(%{text: "Sign in me by <mailto:sergeg1990@gmail.com|sergeg1990@gmail.com> and somepassword"}, %{})
+    text = income_message |> IncomeMessage.text
+    assert text == "Sign in me by sergeg1990@gmail.com and somepassword"
+  end
+
   test "slack_users returns list of users", %{raw_message: raw_message} do
     users = IncomeMessage.slack_users(raw_message)
     assert is_map(users)
