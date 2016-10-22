@@ -7,6 +7,8 @@ defmodule Storage.DB.Repo.Migrations.AddWordTrainingsTable do
       add :word_id, :integer
       add :status, :string, size: 128
       add :attempts_to_success, :integer, default: 0
+
+      timestamps
     end
 
     create index(:word_trainings, [:user_id])
