@@ -18,7 +18,7 @@ defmodule SlackBot.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :slack, :websocket_client, :storage, :lingualeo_gateway, :jsx],
+    [applications: [:slack, :websocket_client, :storage, :lingualeo_gateway, :jsx],
      mod: {SlackBot, []}]
   end
 
