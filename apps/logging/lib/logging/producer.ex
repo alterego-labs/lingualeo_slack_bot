@@ -2,7 +2,7 @@ defmodule Logging.Producer do
   @moduledoc """
   Makes a module where you use it as a logs producer.
 
-  When you use this module you must to specify a `from_application` parameter. For example:
+  When you use this module you can specify a `from_application` parameter. For example:
 
   ```elixir
   defmodule SlackBot.SlackRtm do
@@ -17,16 +17,21 @@ defmodule Logging.Producer do
     - `logging_info/1`
     - `logging_error/1`
     - `logging_warn/1`
+
+  When you do not specify `from_application` option a default application name will be used. It is
+  evaluated as application for a module in which you use `Logging.Producer` module.
   """
 
   @levels [:debug, :info, :error, :warn]
 
-  defmacro __using__([from_application: from_application]) do
+  defmacro __using__(opts \\ []) do
     @levels |> Enum.map(fn(log_level) ->
       name = String.to_atom "logging_#{log_level}"
       quote do
         def unquote(name)(message) do
-          Logging.API.unquote(log_level)(unquote(from_application), message)
+          default_app_name = Application.get_application(__MODULE__)
+          app_name = unquote(opts) |> Keyword.get(:from_application, default_app_name)
+          Logging.API.unquote(log_level)(app_name, message)
         end
       end
     end)

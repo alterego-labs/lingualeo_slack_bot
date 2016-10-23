@@ -4,7 +4,7 @@ defmodule SlackBot.SlackRtm do
   """
 
   use Slack
-  use Logging.Producer, from_application: :slack_bot
+  use Logging.Producer
 
   alias SlackBot.Core.{IncomeMessage, CurrentUserState}
   alias SlackBot.Resolver

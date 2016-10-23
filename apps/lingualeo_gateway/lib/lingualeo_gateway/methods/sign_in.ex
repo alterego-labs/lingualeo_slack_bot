@@ -3,7 +3,7 @@ defmodule LingualeoGateway.Methods.SignIn do
   Contains logic to perform sign in method
   """
 
-  use Logging.Producer, from_application: :lingualeo_gateway
+  use Logging.Producer
 
   @url "http://api.lingualeo.com/api/login"
 
