@@ -1,8 +1,8 @@
-defmodule SlackBot.Mixfile do
+defmodule Logging.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :slack_bot,
+    [app: :logging,
      version: "0.1.0",
      build_path: "../../_build",
      config_path: "../../config/config.exs",
@@ -18,8 +18,8 @@ defmodule SlackBot.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:slack, :websocket_client, :storage, :lingualeo_gateway, :jsx, :logging],
-     mod: {SlackBot, []}]
+    [applications: [:logger],
+     mod: {Logging, []}]
   end
 
   # Dependencies can be Hex packages:
@@ -36,12 +36,6 @@ defmodule SlackBot.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [
-      {:storage, in_umbrella: true},
-      {:lingualeo_gateway, in_umbrella: true},
-      {:logging, in_umbrella: true},
-      {:slack, "~> 0.7.1"},
-      {:websocket_client, git: "https://github.com/jeremyong/websocket_client"}
-    ]
+    []
   end
 end

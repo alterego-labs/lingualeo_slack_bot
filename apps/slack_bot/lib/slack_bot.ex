@@ -8,14 +8,18 @@ defmodule SlackBot do
   use Application
 
   @doc """
-  Starts application.
+  Starts an application.
   """
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
-    children = [
-      worker(SlackBot.SlackRtm, [Application.get_env(:slack, :api_token)])
-    ]
+    children = if Mix.env != :test do
+      [
+        worker(SlackBot.SlackRtm, [Application.get_env(:slack, :api_token)])
+      ]
+    else
+      []
+    end
 
     opts = [strategy: :one_for_one, name: SlackBot.Supervisor]
     Supervisor.start_link(children, opts)
