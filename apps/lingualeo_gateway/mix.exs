@@ -37,7 +37,8 @@ defmodule LingualeoGateway.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:httpotion, "~> 3.0.2"}
+      {:httpotion, "~> 3.0.2"},
+      {:logging, in_umbrella: true}
     ]
   end
 end

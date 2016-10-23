@@ -9,14 +9,14 @@ defmodule SlackBot.SlackRtm do
   alias SlackBot.Resolver
 
   def handle_connect(slack) do
-    IO.puts "Connected as #{slack.me.name}"
+    Logging.API.info(:slack_bot, "Connected as #{slack.me.name}")
   end
 
   def handle_message(message = %{type: "message", reply_to: nil}, _slack) do
-    IO.puts "Received a message: #{message.text}"
+    Logging.API.info(:slack_bot, "Received a message: #{message.text}")
   end
   def handle_message(message = %{type: "message"}, slack) do
-    IO.puts "Received a message: #{message.text}"
+    Logging.API.info(:slack_bot, "Received a message: #{message.text}")
     income_message = IncomeMessage.build(message, slack)
     sender = income_message |> IncomeMessage.sender
     user_state = CurrentUserState.build(sender.name)

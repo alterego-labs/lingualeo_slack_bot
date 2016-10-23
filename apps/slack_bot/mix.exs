@@ -18,7 +18,7 @@ defmodule SlackBot.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:slack, :websocket_client, :storage, :lingualeo_gateway, :jsx],
+    [applications: [:slack, :websocket_client, :storage, :lingualeo_gateway, :jsx, :logging],
      mod: {SlackBot, []}]
   end
 
@@ -39,6 +39,7 @@ defmodule SlackBot.Mixfile do
     [
       {:storage, in_umbrella: true},
       {:lingualeo_gateway, in_umbrella: true},
+      {:logging, in_umbrella: true},
       {:slack, "~> 0.7.1"},
       {:websocket_client, git: "https://github.com/jeremyong/websocket_client"}
     ]
