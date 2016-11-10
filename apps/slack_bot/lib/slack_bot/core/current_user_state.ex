@@ -5,7 +5,7 @@ defmodule SlackBot.Core.CurrentUserState do
   Current user is the one which has posted a message.
   """
 
-  defstruct is_signed_in: false, is_in_training: false
+  defstruct is_signed_in: false, is_in_training: false, user_login: nil
 
   @type t :: %__MODULE__{}
 
@@ -16,7 +16,8 @@ defmodule SlackBot.Core.CurrentUserState do
   def build(user_login) do
     %__MODULE__{
       is_signed_in: detect_signed_in_status(user_login),
-      is_in_training: detect_training_status(user_login)
+      is_in_training: detect_training_status(user_login),
+      user_login: user_login
     }
   end
 

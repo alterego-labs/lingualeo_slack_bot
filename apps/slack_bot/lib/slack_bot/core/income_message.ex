@@ -113,14 +113,10 @@ defmodule SlackBot.Core.IncomeMessage do
 
   defp detect_type(message_text) do
     cond do
-      Regex.match?(@sign_in_type_regexp, message_text) ->
-        :sign_in
-      Regex.match?(~r/^Give me a word$/, message_text) ->
-        :request_word
-      Regex.match?(~r/^.+$/, message_text) ->
-        :answer
-      true ->
-        :unknown
+      Regex.match?(@sign_in_type_regexp, message_text) -> :sign_in
+      Regex.match?(~r/^Give me a word$/, message_text) -> :request_word
+      Regex.match?(~r/^.+$/, message_text) -> :answer
+      true -> :unknown
     end
   end
 

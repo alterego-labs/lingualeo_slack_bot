@@ -19,4 +19,14 @@ defmodule Storage.DB.WordTrainingTest do
                   |> Repo.all
     assert Enum.count(collection) == 1
   end
+
+  test "build_new_for builds word training struct based on word struct" do
+    user = create(:user) 
+    word = create(:word, user: user)
+    word_training = WordTraining.build_new_for(word)
+    assert %WordTraining{} = word_training
+    assert word_training.status == "in_progress"
+    assert word_training.user != nil
+    assert word_training.word != nil
+  end
 end

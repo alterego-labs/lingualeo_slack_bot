@@ -5,7 +5,7 @@ defmodule Storage.API do
 
   @type user_login :: String.t
 
-  alias Storage.DB.{User, Repo}
+  alias Storage.DB.{User, Repo, Word, WordTraining}
 
   @doc """
   Checks is an user with a given login signed in or not
@@ -67,6 +67,38 @@ defmodule Storage.API do
     user_login
     |> user_by_login
     |> resolve_user_is_in_training
+  end
+
+  @doc """
+  Checks if an user has available words for training
+  """
+  @spec user_has_words_for_training?(user_login) :: boolean
+  def user_has_words_for_training?(user_login) do
+    user_login
+    |> user_by_login
+    |> User.has_words_for_training?
+  end
+
+  @doc """
+  Fetches a random word for user
+  """
+  @spec random_word_for(user_login) :: Word.t
+  def random_word_for(user_login) do
+    user = user_login |> user_by_login
+    user = Repo.preload(user, :words, [force: true])
+    user.words |> Enum.random
+  end
+
+  @doc """
+  Marks a given word for training
+  """
+  @spec train_word(Word.t) :: {:ok | :error}
+  def train_word(word) do
+    word_training = WordTraining.build_new_for(word)
+    case Repo.insert(word_training) do
+      {:ok, _struct} -> {:ok}
+      {:error, _changeset} -> {:error}
+    end
   end
 
   defp resolve_user_signed_in(nil = user), do: false
