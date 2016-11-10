@@ -6,6 +6,8 @@ defmodule SlackBot.Resolver do
   alias SlackBot.Core.{IncomeMessage, CurrentUserState, Operations}
   alias SlackBot.API
 
+  import SlackBot.Core.ResponseMessageBuilder
+
   @doc """
   Runs resolving procedure
   """
@@ -29,16 +31,14 @@ defmodule SlackBot.Resolver do
   end
   def call(%CurrentUserState{is_signed_in: true, is_in_training: false}, %IncomeMessage{type: :request_word} = income_message) do
     operation_result = Operations.RequestWord.call(income_message)
+    message_reason = case operation_result do
+      {:ok, word_for_training} -> send_message_back(:take_a_word_for_training, income_message, [word: word_for_training])
+      {:error, reason} -> send_message_back(reason, income_message)
+    end
   end
 
-  defp send_message_back(reason, %IncomeMessage{} = income_message) do
+  defp send_message_back(reason, %IncomeMessage{} = income_message, opts \\ []) do
     channel_identifier = IncomeMessage.channel(income_message)
-    reason |> message_for_reason |> API.send_message(channel_identifier)
+    reason |> message_for_reason(opts) |> API.send_message(channel_identifier)
   end
-
-  defp message_for_reason(:you_are_a_guest), do: "Looks like you are not signed in... Please sign in first to start your training! :-)"
-  defp message_for_reason(:signed_in_successfully), do: "Looks good, man! You now is signed in! Good luck :-)"
-  defp message_for_reason(:invalid_message), do: "Hey, man! I think you asked me something wrong... Please, try again."
-  defp message_for_reason(:invalid_credentials), do: "Credentials which were provided by you aren't correct!"
-  defp message_for_reason(:already_in_training), do: "Hm... It's likely you are already in training mode..."
 end
