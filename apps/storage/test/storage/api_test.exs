@@ -12,7 +12,7 @@ defmodule Storage.APITest do
   end
 
   test "random_word_for returns a random word which user owns" do
-    user = create(:user) |> with_word |> with_word
+    user = :user |> create |> with_word |> with_word
     random_word = API.random_word_for(user.login)
     assert %Word{} = random_word
   end

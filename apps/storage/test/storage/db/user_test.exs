@@ -14,7 +14,7 @@ defmodule Storage.DB.UserTest do
   end
 
   test "is_in_training? returns true if user has at least one in progress training word" do
-    user = create(:user) |> with_word_training(status: "in_progress")
+    user = :user |> create |> with_word_training(status: "in_progress")
     assert User.is_in_training?(user)
   end
 
@@ -38,7 +38,7 @@ defmodule Storage.DB.UserTest do
   end
 
   test "has_words_for_training? returns true if there is any words" do
-    user = create(:user) |> with_word
+    user = :user |> create |> with_word
     assert User.has_words_for_training?(user)
   end
 end
