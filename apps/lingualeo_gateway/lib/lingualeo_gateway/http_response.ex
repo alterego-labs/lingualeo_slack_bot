@@ -1,3 +1,4 @@
+# TODO: This struct is handy only for representing sign in response. So it must be refactored to reflect that
 defmodule LingualeoGateway.HttpResponse do
   @moduledoc """
   Represents a http response struct.

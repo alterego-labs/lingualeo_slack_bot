@@ -25,12 +25,21 @@ defmodule LingualeoGateway.ApiPoint do
   @doc """
   Sends sign in request to the LinguaLeo API
   """
+  @spec sign_in(String.t, String.t) :: {:ok | :error, String.t, Map.t, [String.t]}
   def sign_in(email, password) do
     GenServer.call __MODULE__, {:sign_in, email, password}  
   end
 
+  def get_userdict(cookies, offset) do
+    GenServer.call __MODULE__, {:get_userdict, cookies, offset} 
+  end
+
   def handle_call({:sign_in, email, password}, _from, state) do
     result = LingualeoGateway.Methods.SignIn.call(email, password)
+    {:reply, result, state}
+  end
+  def handle_call({:get_userdict, cookies, offset}, _from, state) do
+    result = LingualeoGateway.Methods.GetUserdict.call(cookies, offset)
     {:reply, result, state}
   end
 end
