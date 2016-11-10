@@ -28,6 +28,7 @@ defmodule Logging.Producer do
     @levels |> Enum.map(fn(log_level) ->
       name = String.to_atom "logging_#{log_level}"
       quote do
+        @doc false
         def unquote(name)(message) do
           default_app_name = Application.get_application(__MODULE__)
           app_name = unquote(opts) |> Keyword.get(:from_application, default_app_name)
