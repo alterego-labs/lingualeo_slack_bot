@@ -25,5 +25,7 @@ defmodule SlackBot.Core.Operations.RequestWord do
 
   defp choose_next_word_for_training(user_login) do
     word = Storage.API.random_word_for(user_login)
+    Storage.API.train_word(word)
+    word.value
   end
 end
