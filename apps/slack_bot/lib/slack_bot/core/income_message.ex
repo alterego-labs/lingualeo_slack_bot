@@ -106,7 +106,8 @@ defmodule SlackBot.Core.IncomeMessage do
   def sign_in_credentials(%__MODULE__{type: type}) when type != :sign_in, do: {:error, "You tried to get credentials from the not sign in message!"}
   def sign_in_credentials(%__MODULE__{} = income_message) do
     message_text = income_message |> text
-    captures = Regex.named_captures(@sign_in_type_regexp, message_text)
+    captures = @sign_in_type_regexp
+                |> Regex.named_captures(message_text)
                 |> Enum.reduce(%{}, fn ({key, val}, acc) -> Map.put(acc, String.to_atom(key), val) end)
     {:ok, captures}
   end

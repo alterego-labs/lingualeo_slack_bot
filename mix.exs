@@ -23,7 +23,8 @@ defmodule LingualeoSlackBot.Mixfile do
   defp deps do
     [
       {:ex_doc, "~> 0.14", only: :dev},
-      {:exjsx, "3.2.1"} 
+      {:exjsx, "3.2.1"},
+      {:credo, "~> 0.4", only: [:dev, :test]}
     ]
   end
 end

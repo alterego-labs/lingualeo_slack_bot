@@ -20,7 +20,8 @@ defmodule SlackBot.API do
   end
 
   defp detect_child_pid(child_module) do
-    worker_spec = Supervisor.which_children(SlackBot.Supervisor)
+    worker_spec = SlackBot.Supervisor
+                  |> Supervisor.which_children
                   |> Enum.find(fn({module, _pid, _type, _opts}) ->
                     module == child_module
                   end)

@@ -4,7 +4,7 @@ defmodule Storage.DB.WordTrainingTest do
   alias Storage.DB.WordTraining
 
   test "for_user filters word training for a given user" do
-    user = create(:user) |> with_word_training
+    user = :user |> create |> with_word_training
     collection = WordTraining
                   |> WordTraining.for_user(user)
                   |> Repo.all

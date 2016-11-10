@@ -12,12 +12,13 @@ defmodule LingualeoGateway.Methods.SignIn do
   """
   def call(email, password) do
     logging_info "Trying to sign in user with email `#{email}` and password `#{password}`"
-    do_http_request(email, password)
+    {email, password}
+    |> do_http_request
     |> LingualeoGateway.HttpResponse.from_3rdparty_response
     |> decide_about_response
   end
 
-  defp do_http_request(email, password) do
+  defp do_http_request({email, password}) do
     HTTPotion.post @url <> "?email=#{email}&password=#{password}"
   end
 
