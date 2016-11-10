@@ -6,7 +6,7 @@ defmodule Storage.DB.User do
   use Ecto.Schema
   import Ecto.Query
 
-  alias Storage.DB.{Repo, WordTraining}
+  alias Storage.DB.{Repo, WordTraining, Word}
 
   @type t :: %__MODULE__{}
 
@@ -51,6 +51,15 @@ defmodule Storage.DB.User do
             |> WordTraining.with_in_progress_status
             |> Repo.all
             |> Enum.count
+    count > 0
+  end
+
+  @doc """
+  Specifies if user has available words for training
+  """
+  def has_words_for_training?(%__MODULE__{} = user) do
+    user = Repo.preload(user, :words, [force: true])
+    count = user.words |> Enum.count
     count > 0
   end
 end

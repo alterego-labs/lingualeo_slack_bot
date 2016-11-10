@@ -31,4 +31,14 @@ defmodule Storage.DB.UserTest do
     user = create(:user)
     assert %User{} = User.fetch_by_login(user.login)
   end
+
+  test "has_words_for_training? returns false if there is no any words" do
+    user = create(:user)
+    refute User.has_words_for_training?(user)
+  end
+
+  test "has_words_for_training? returns true if there is any words" do
+    user = create(:user) |> with_word
+    assert User.has_words_for_training?(user)
+  end
 end

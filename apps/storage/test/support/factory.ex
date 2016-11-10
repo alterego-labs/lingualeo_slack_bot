@@ -21,6 +21,12 @@ defmodule Storage.Factory do
     }
   end
 
+  def with_word(%User{} = user, opts \\ []) do
+    word_opts = Keyword.merge([user: user], opts)
+    create(:word, word_opts)
+    user
+  end
+
   def with_word_training(%User{} = user, opts \\ []) do
     word_training_opts = Keyword.merge([user: user], opts)
     create(:word_training, word_training_opts)

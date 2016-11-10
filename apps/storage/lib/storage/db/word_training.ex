@@ -6,7 +6,7 @@ defmodule Storage.DB.WordTraining do
   use Ecto.Schema
   import Ecto.Query
 
-  alias Storage.DB.{User}
+  alias Storage.DB.{User, Word, Repo}
 
   schema "word_trainings" do
     field :status, :string
@@ -34,5 +34,18 @@ defmodule Storage.DB.WordTraining do
   def with_in_progress_status(query) do
     from wt in query,
     where: wt.status == "in_progress"
+  end
+
+  @doc """
+  Builds new word training struct based on a given word
+  """
+  @spec build_new_for(Word.t) :: WordTraining.t
+  def build_new_for(word) do
+    word = Repo.preload(word, :user)
+    %__MODULE__{
+      status: "in_progress",
+      word: word,
+      user: word.user
+    }
   end
 end
