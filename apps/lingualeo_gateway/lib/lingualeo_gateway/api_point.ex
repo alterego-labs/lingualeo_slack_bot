@@ -8,7 +8,7 @@ defmodule LingualeoGateway.ApiPoint do
 
   use GenServer
 
-  alias LingualeoGateway.Methods.*
+  alias LingualeoGateway.Methods.{SignIn, GetUserdict}
 
   @doc """
   Starts a worker
