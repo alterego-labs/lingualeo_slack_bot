@@ -1,4 +1,8 @@
 defmodule Storage.Factory do
+  @moduledoc """
+  Provides factory methods to build entities in tests very easy
+  """
+
   use ExMachina.Ecto, repo: Storage.DB.Repo
 
   alias Storage.DB.{User, Word, WordTraining}

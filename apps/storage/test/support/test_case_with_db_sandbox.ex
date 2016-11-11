@@ -1,4 +1,8 @@
 defmodule TestCaseWithDbSandbox do
+  @moduledoc """
+  Template for ExUnit which provides implicit setup for DB sandbox.
+  """
+
   use ExUnit.CaseTemplate
 
   using do
