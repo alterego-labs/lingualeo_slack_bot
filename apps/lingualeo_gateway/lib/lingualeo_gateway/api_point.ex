@@ -8,6 +8,8 @@ defmodule LingualeoGateway.ApiPoint do
 
   use GenServer
 
+  alias LingualeoGateway.Methods.*
+
   @doc """
   Starts a worker
   """
@@ -35,11 +37,11 @@ defmodule LingualeoGateway.ApiPoint do
   end
 
   def handle_call({:sign_in, email, password}, _from, state) do
-    result = LingualeoGateway.Methods.SignIn.call(email, password)
+    result = SignIn.call(email, password)
     {:reply, result, state}
   end
   def handle_call({:get_userdict, cookies, offset}, _from, state) do
-    result = LingualeoGateway.Methods.GetUserdict.call(cookies, offset)
+    result = GetUserdict.call(cookies, offset)
     {:reply, result, state}
   end
 end

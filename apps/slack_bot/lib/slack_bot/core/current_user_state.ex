@@ -12,7 +12,7 @@ defmodule SlackBot.Core.CurrentUserState do
   @doc """
   Builds state of a user with a given login
   """
-  @spec build(String.t) :: __MODULE__.t 
+  @spec build(String.t) :: __MODULE__.t
   def build(user_login) do
     %__MODULE__{
       is_signed_in: detect_signed_in_status(user_login),
