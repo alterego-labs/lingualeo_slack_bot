@@ -10,8 +10,8 @@ defmodule LingualeoSlackBot.Mixfile do
       name: "LingualeoSlackBot",
       version: "1.0.0.beta0",
       docs: [
-        main: "readme",
-        extras: ["README.md"]
+        main: "main",
+        extras: ["docs/main.md"]
       ]
     ]
   end
