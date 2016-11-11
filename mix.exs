@@ -2,10 +2,18 @@ defmodule LingualeoSlackBot.Mixfile do
   use Mix.Project
 
   def project do
-    [apps_path: "apps",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps]
+    [
+      apps_path: "apps",
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
+      deps: deps,
+      name: "LingualeoSlackBot",
+      version: "1.0.0.beta0",
+      docs: [
+        main: "readme",
+        extras: ["README.md"]
+      ]
+    ]
   end
 
   # Dependencies can be Hex packages:
@@ -22,7 +30,7 @@ defmodule LingualeoSlackBot.Mixfile do
   # and cannot be accessed from applications inside the apps folder
   defp deps do
     [
-      {:ex_doc, "~> 0.14", only: :dev},
+      {:ex_doc, github: "elixir-lang/ex_doc", ref: "2eee86869710997df432f83230d228134c332d7a", only: :dev},
       {:exjsx, "3.2.1"},
       {:credo, "~> 0.4", only: [:dev, :test]}
     ]
