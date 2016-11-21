@@ -35,6 +35,6 @@ defmodule LingualeoGateway.API do
   """
   @spec get_userdict(list(String.t), pos_integer) :: {:ok, UserDict.t} | {:error, reason}
   def get_userdict(cookies, offset \\ 400) do
-    
+    LingualeoGateway.ApiPoint.get_userdict(cookies, offset)  
   end
 end

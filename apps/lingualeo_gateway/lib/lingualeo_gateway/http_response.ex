@@ -1,4 +1,3 @@
-# TODO: This struct is handy only for representing sign in response. So it must be refactored to reflect that
 defmodule LingualeoGateway.HttpResponse do
   @moduledoc """
   Represents a http response struct.
@@ -7,21 +6,36 @@ defmodule LingualeoGateway.HttpResponse do
   Can be built from 3rd party http responses structs, such as HTTPotion library.
   """
 
-  defstruct [:response_hash, :cookies, :is_success, :error_msg]
+  defstruct [:response_hash, :cookies, :is_success, :error_msg, :status_code, :raw_body]
 
   @doc """
   Builds a http response record from a 3rd party one
   """
-  def from_3rdparty_response(%HTTPotion.Response{body: json_str, headers: headers}) do
-    {:ok, response_hash} = json_str |> JSX.decode([{:labels, :atom}])
-    {:ok, cookies} = headers |> HTTPotion.Headers.fetch(:"set-cookie")
-    is_success = !(response_hash |> Map.has_key?(:error_code))
-    error_msg = response_hash |> Map.get(:error_msg, "")
+  def from_3rdparty_response(%HTTPotion.Response{body: json_str, headers: headers, status_code: status_code}) do
+    {:ok, response_hash} = JSX.decode(json_str, [{:labels, :atom}])
+    {:ok, cookies} = HTTPotion.Headers.fetch(headers, :"set-cookie")
+    error_code = Map.get(response_hash, :error_code, 200)
+    error_msg = Map.get(response_hash, :error_msg, "")
+    status_code = resolve_status_code(error_code, status_code)
+    is_success = status_code == 200
     %__MODULE__{
       response_hash: response_hash,
+      raw_body: json_str,
       cookies: cookies,
       is_success: is_success,
-      error_msg: error_msg
+      error_msg: error_msg,
+      status_code: resolve_status_code(error_code, status_code)
     }
   end
+
+  @doc """
+  Resolves the final status code value.
+  
+  This logic is needed because of LinguaLeo API returns error responses as _200 OK_. But could be
+  some situations when the HTTP response status code does not equal 200, so it must be returned
+  instead the error code from the response hash.
+  """
+  defp resolve_status_code(error_code, status_code) when error_code == status_code, do: status_code
+  defp resolve_status_code(_error_code, status_code) when status_code != 200, do: status_code
+  defp resolve_status_code(error_code, _status_code), do: error_code
 end

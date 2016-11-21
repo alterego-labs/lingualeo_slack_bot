@@ -10,6 +10,8 @@ defmodule LingualeoGateway.ApiPoint do
 
   alias LingualeoGateway.Methods.{SignIn, GetUserdict}
 
+  @type reason :: Atom.t
+
   @doc """
   Starts a worker
   """
@@ -32,6 +34,10 @@ defmodule LingualeoGateway.ApiPoint do
     GenServer.call __MODULE__, {:sign_in, email, password}  
   end
 
+  @doc """
+  Gets user's dictionary list
+  """
+  @spec get_userdict(list(String.t), pos_integer) :: {:ok, UserDict.t} | {:error, reason}
   def get_userdict(cookies, offset) do
     GenServer.call __MODULE__, {:get_userdict, cookies, offset} 
   end
