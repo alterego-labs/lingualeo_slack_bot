@@ -35,7 +35,12 @@ defmodule SlackBot.Core.IncomeMessageTest do
     assert raw_message.type == :request_word
   end
 
-  @tag :wip
+  test "build inits struct with a proper type when income message tells to update dictionary" do
+    raw_message = IncomeMessage.build(%{text: "Update dictionary"}, %{})
+    assert %IncomeMessage{} = raw_message
+    assert raw_message.type == :update_dictionary
+  end
+
   test "build cleans up a message from mailto" do
     income_message = IncomeMessage.build(%{text: "Sign in me by <mailto:sergeg1990@gmail.com|sergeg1990@gmail.com> and somepassword"}, %{})
     text = income_message |> IncomeMessage.text
