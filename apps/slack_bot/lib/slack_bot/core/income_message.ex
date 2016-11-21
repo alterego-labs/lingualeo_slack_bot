@@ -116,6 +116,7 @@ defmodule SlackBot.Core.IncomeMessage do
     cond do
       Regex.match?(@sign_in_type_regexp, message_text) -> :sign_in
       Regex.match?(~r/^Give me a word$/, message_text) -> :request_word
+      Regex.match?(~r/^Update dictionary$/, message_text) -> :update_dictionary
       Regex.match?(~r/^.+$/, message_text) -> :answer
       true -> :unknown
     end
