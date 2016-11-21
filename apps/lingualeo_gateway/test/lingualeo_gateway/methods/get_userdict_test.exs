@@ -58,6 +58,11 @@ defmodule LingualeoGateway.Methods.GetUserdictTest do
     headers: %HTTPotion.Headers{hdrs: %{"set-cookie" => ""}}
   }
 
+  @failure_response_500 %HTTPotion.Response{
+    status_code: 500, body: "",
+    headers: %HTTPotion.Headers{hdrs: %{"set-cookie" => ""}}
+  }
+
   test "call returns UserDict struct when response is successful" do
     with_mock HTTPotion, [get: fn("http://api.lingualeo.com/userdict?port=1&offset=300", _options) ->  @success_response end] do
       result = GetUserdict.call([""], 300)
@@ -69,6 +74,13 @@ defmodule LingualeoGateway.Methods.GetUserdictTest do
     with_mock HTTPotion, [get: fn("http://api.lingualeo.com/userdict?port=1&offset=300", _options) ->  @failure_response_401 end] do
       result = GetUserdict.call([""], 300)
       assert {:error, :unauthorized} = result
+    end
+  end
+
+  test "call returns proper error tuple when response is failure with 500 status code" do
+    with_mock HTTPotion, [get: fn("http://api.lingualeo.com/userdict?port=1&offset=300", _options) ->  @failure_response_500 end] do
+      result = GetUserdict.call([""], 300)
+      assert {:error, :unexpected_error} = result
     end
   end
 end

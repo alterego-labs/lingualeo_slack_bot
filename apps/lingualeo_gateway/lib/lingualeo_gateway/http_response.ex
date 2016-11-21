@@ -12,7 +12,7 @@ defmodule LingualeoGateway.HttpResponse do
   Builds a http response record from a 3rd party one
   """
   def from_3rdparty_response(%HTTPotion.Response{body: json_str, headers: headers, status_code: status_code}) do
-    {:ok, response_hash} = JSX.decode(json_str, [{:labels, :atom}])
+    response_hash = decode_raw_body(json_str)
     {:ok, cookies} = HTTPotion.Headers.fetch(headers, :"set-cookie")
     error_code = Map.get(response_hash, :error_code, 200)
     error_msg = Map.get(response_hash, :error_msg, "")
@@ -26,6 +26,12 @@ defmodule LingualeoGateway.HttpResponse do
       error_msg: error_msg,
       status_code: resolve_status_code(error_code, status_code)
     }
+  end
+
+  defp decode_raw_body(""), do: %{}
+  defp decode_raw_body(json_str) do
+    {:ok, response_hash} = JSX.decode(json_str, [{:labels, :atom}])
+    response_hash
   end
 
   @doc """

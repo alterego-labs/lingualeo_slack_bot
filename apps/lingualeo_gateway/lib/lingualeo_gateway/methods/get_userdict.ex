@@ -42,4 +42,8 @@ defmodule LingualeoGateway.Methods.GetUserdict do
     logging_info "Error while getting user dictionary: user is unauthorized!"
     {:error, :unauthorized}
   end
+  defp decide_about_method_response(%HttpResponse{is_success: false, status_code: 500}) do
+    logging_error "Some unexpected error was occured!"
+    {:error, :unexpected_error}
+  end
 end
