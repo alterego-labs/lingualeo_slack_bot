@@ -32,7 +32,8 @@ defmodule LingualeoSlackBot.Mixfile do
     [
       {:ex_doc, github: "elixir-lang/ex_doc", ref: "2eee86869710997df432f83230d228134c332d7a", only: :dev},
       {:exjsx, "3.2.1"},
-      {:credo, "~> 0.4", only: [:dev, :test]}
+      {:credo, "~> 0.4", only: [:dev, :test]},
+      {:mock, "~> 0.2.0", only: :test}
     ]
   end
 end

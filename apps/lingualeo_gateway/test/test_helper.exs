@@ -1,1 +1,3 @@
+HTTPotion.start
+
 ExUnit.start()
