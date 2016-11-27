@@ -8,7 +8,7 @@ defmodule Storage.API do
   alias Storage.DB.{User, Repo, Word, WordTraining}
 
   @doc """
-  Checks is an user with a given login signed in or not
+  Checks is an user with a given login signed in or not.
   """
   @spec user_signed_in?(user_login) :: boolean
   def user_signed_in?(user_login) do
@@ -18,7 +18,7 @@ defmodule Storage.API do
   end
 
   @doc """
-  Checks if an user with a given login exists or not
+  Checks if an user with a given login exists or not.
   """
   @spec user_exists?(user_login) :: boolean
   def user_exists?(user_login) do
@@ -28,7 +28,7 @@ defmodule Storage.API do
   end
 
   @doc """
-  Fetches user by login
+  Fetches user by login.
   """
   @spec user_by_login(user_login) :: %User{} | nil
   def user_by_login(user_login) do
@@ -50,7 +50,23 @@ defmodule Storage.API do
   end
 
   @doc """
-  Updates an user with a given attributes list
+  Updates an user with a given attributes list.
+
+  ## Examples
+
+  Update attributes of already existed user:
+
+  ```elixir
+  user
+  |> Storage.API.user_update(%{cookies: "[...]", response_hash: "{...}"})
+  ```
+
+  Makes user unauthorized
+
+  ```elixir
+  user
+  |> Storage.API.user_update(%{cookies: "", response_hash: ""})
+  ```
   """
   @spec user_update(User.t, Map.t) :: none
   def user_update(%User{} = user, attributes \\ %{}) do
@@ -60,7 +76,7 @@ defmodule Storage.API do
   end
 
   @doc """
-  Checks if user with a given login is in training already
+  Checks if user with a given login is in training already.
   """
   @spec user_is_in_training?(user_login) :: boolean
   def user_is_in_training?(user_login) do
@@ -70,7 +86,7 @@ defmodule Storage.API do
   end
 
   @doc """
-  Checks if an user has available words for training
+  Checks if an user has available words for training.
   """
   @spec user_has_words_for_training?(user_login) :: boolean
   def user_has_words_for_training?(user_login) do
@@ -80,17 +96,16 @@ defmodule Storage.API do
   end
 
   @doc """
-  Fetches a random word for user
+  Fetches a random word for user.
   """
   @spec random_word_for(user_login) :: Word.t
   def random_word_for(user_login) do
-    user = user_login |> user_by_login
-    user = Repo.preload(user, :words, [force: true])
+    user = user_login |> user_by_login |> Repo.preload(:words, [force: true])
     user.words |> Enum.random
   end
 
   @doc """
-  Marks a given word for training
+  Marks a given word for training.
   """
   @spec train_word(Word.t) :: {:ok | :error}
   def train_word(word) do
@@ -98,6 +113,39 @@ defmodule Storage.API do
     case Repo.insert(word_training) do
       {:ok, _struct} -> {:ok}
       {:error, _changeset} -> {:error}
+    end
+  end
+
+  @doc """
+  Adds a word to an user's dictionary.
+
+  You must prepare a `Storage.DB.Word` struct manually to be able to perform this action.
+
+  _Notice:_ each word has uniq `external_id` identifier. If word with the same `external_id`
+  for a given user is already exists, the new one won't be added.
+  """
+  @spec add_word(user_login, Word.t) :: none
+  def add_word(user_login, %Word{} = word) do
+    user = user_by_login(user_login)
+    case has_word_with_external_id?(user, word.external_id) do
+      true -> {:error, :already_exists}
+      false -> create_new_word(user, word)
+    end
+  end
+
+  defp has_word_with_external_id?(user, external_id) do
+    words = Word
+            |> Word.for_user(user)
+            |> Word.with_external_id(external_id)
+            |> Repo.all
+    Enum.count(words) > 0
+  end
+
+  defp create_new_word(%User{} = user, %Word{} = word) do
+    word = %{word | user_id: user.id}
+    case Repo.insert(word) do
+      {:ok, _struct} -> {:ok}
+      {:error, _changeset} -> {:error, :insert_failed}
     end
   end
 
