@@ -16,7 +16,7 @@ defmodule LingualeoGateway.Core.UserDict do
   def build_from(%HttpResponse{} = http_response) do
     response_hash = http_response.response_hash
     %__MODULE__{
-      has_more: Map.get(response_hash, :has_more),
+      has_more: Map.get(response_hash, :next_chunk),
       words: Map.get(response_hash, :words)
     }  
   end
