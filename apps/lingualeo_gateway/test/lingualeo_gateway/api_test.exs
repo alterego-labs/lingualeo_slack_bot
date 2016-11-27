@@ -1,9 +1,9 @@
-defmodule LingualeoGateway.Methods.GetUserdictTest do
+defmodule LingualeoGateway.APITest do
   use ExUnit.Case, async: true
 
   import Mock
 
-  alias LingualeoGateway.Methods.GetUserdict
+  alias LingualeoGateway.API
   alias LingualeoGateway.Core.{UserDict}
 
   @success_response_json """
@@ -41,6 +41,7 @@ defmodule LingualeoGateway.Methods.GetUserdictTest do
    "next_chunk": true
   } 
   """
+
   @success_response %HTTPotion.Response{
     status_code: 200, body: @success_response_json,
     headers: %HTTPotion.Headers{hdrs: %{"set-cookie" => ""}}
@@ -63,23 +64,26 @@ defmodule LingualeoGateway.Methods.GetUserdictTest do
     headers: %HTTPotion.Headers{hdrs: %{"set-cookie" => ""}}
   }
 
-  test "call returns UserDict struct when response is successful" do
+  test "get_userdict returns ok with user dictionary list" do
     with_mock HTTPotion, [get: fn("http://api.lingualeo.com/userdict?port=1&offset=300", _options) ->  @success_response end] do
-      result = GetUserdict.call([""], 300)
-      assert {:ok, %UserDict{}} = result
+      result = API.get_userdict([""], 300)
+      assert {:ok, %UserDict{} = user_dictionary} = result
+
+      assert user_dictionary.has_more == true
+      assert Enum.count(user_dictionary.words) == 1
     end
   end
 
-  test "call returns proper error tuple when response is failure with 401 status code" do
+  test "get_userdict returns proper error tuple when response is failure with 401 status code" do
     with_mock HTTPotion, [get: fn("http://api.lingualeo.com/userdict?port=1&offset=300", _options) ->  @failure_response_401 end] do
-      result = GetUserdict.call([""], 300)
+      result = API.get_userdict([""], 300)
       assert {:error, :unauthorized} = result
     end
   end
 
-  test "call returns proper error tuple when response is failure with 500 status code" do
+  test "get_userdict returns proper error tuple when response is failure with 500 status code" do
     with_mock HTTPotion, [get: fn("http://api.lingualeo.com/userdict?port=1&offset=300", _options) ->  @failure_response_500 end] do
-      result = GetUserdict.call([""], 300)
+      result = API.get_userdict([""], 300)
       assert {:error, :unexpected_error} = result
     end
   end

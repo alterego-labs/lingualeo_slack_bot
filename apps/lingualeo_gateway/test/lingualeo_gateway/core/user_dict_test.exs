@@ -7,7 +7,7 @@ defmodule LingualeoGateway.Core.UserDictTest do
   test "build_from builds UserDict struct from HttpResponse" do
     words = [%{}, %{}]
     response_hash = %{
-      has_more: true,
+      next_chunk: true,
       words: words
     }
     http_response = %HttpResponse{response_hash: response_hash}
