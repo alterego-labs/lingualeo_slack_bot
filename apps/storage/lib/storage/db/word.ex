@@ -25,7 +25,16 @@ defmodule Storage.DB.Word do
   """
   @spec for_user(Ecto.Queryable.t, User.t) :: Ecto.Queryable.t
   def for_user(query, user) do
-    from wt in query,
-    where: wt.user_id == ^user.id
+    from w in query,
+    where: w.user_id == ^user.id
+  end
+
+  @doc """
+  Scope to filter words by a given `external_id`
+  """
+  @spec with_external_id(Ecto.Queryable.t, String.t) :: Ecto.Queryable.t
+  def with_external_id(query, external_id) do
+    from w in query,
+    where: w.external_id == ^external_id
   end
 end
