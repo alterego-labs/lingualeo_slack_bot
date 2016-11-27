@@ -39,6 +39,10 @@ defmodule SlackBot.Resolver do
       {:error, reason} -> send_message_back(reason, income_message)
     end
   end
+  def call(%CurrentUserState{is_signed_in: true, is_in_training: false}, %IncomeMessage{type: :update_dictionary} = income_message) do
+    operation_result = Operations.UpdateDictionary.call(income_message)
+    send_message_back(:updated_dictionary_successfuly, income_message)
+  end
 
   defp send_message_back(reason, %IncomeMessage{} = income_message, opts \\ []) do
     channel_identifier = IncomeMessage.channel(income_message)

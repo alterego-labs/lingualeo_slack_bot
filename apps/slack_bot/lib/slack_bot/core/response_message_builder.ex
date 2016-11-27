@@ -22,7 +22,8 @@ defmodule SlackBot.Core.ResponseMessageBuilder do
     invalid_credentials: "Credentials which were provided by you aren't correct!",
     already_in_training: "Hm... It's likely you are already in training mode...",
     no_words_for_training: "Unfortunately, you do not have some words for training :-(",
-    take_a_word_for_training: "Okay, cowboy, that is your word for training: `${word}`"
+    take_a_word_for_training: "Okay, cowboy, that is your word for training: `${word}`",
+    updated_dictionary_successfuly: "Your dictionary has been updated successfuly!"
   }
   
   @doc """
