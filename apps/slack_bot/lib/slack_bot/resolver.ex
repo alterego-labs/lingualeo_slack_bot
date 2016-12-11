@@ -34,14 +34,18 @@ defmodule SlackBot.Resolver do
   end
   def call(%CurrentUserState{is_signed_in: true, is_in_training: false}, %IncomeMessage{type: :request_word} = income_message) do
     operation_result = Operations.RequestWord.call(income_message)
-    message_reason = case operation_result do
+    case operation_result do
       {:ok, word_for_training} -> send_message_back(:take_a_word_for_training, income_message, [word: word_for_training])
       {:error, reason} -> send_message_back(reason, income_message)
     end
   end
   def call(%CurrentUserState{is_signed_in: true, is_in_training: false}, %IncomeMessage{type: :update_dictionary} = income_message) do
     operation_result = Operations.UpdateDictionary.call(income_message)
-    send_message_back(:updated_dictionary_successfuly, income_message)
+    message_reason = case operation_result do
+      :ok -> :updated_dictionary_successfuly
+      {:error, reason} -> reason
+    end
+    send_message_back(message_reason, income_message)
   end
 
   defp send_message_back(reason, %IncomeMessage{} = income_message, opts \\ []) do

@@ -62,4 +62,14 @@ defmodule Storage.DB.User do
     count = user.words |> Enum.count
     count > 0
   end
+
+  @doc """
+  Parses cookie string into a list of entries.
+  """
+  @spec parse_cookie(String.t) :: map | list
+  def parse_cookie(cookie) when is_bitstring(cookie) do
+    {:ok, response_hash} = JSX.decode(cookie, [{:labels, :atom}])
+    response_hash
+  end
+  def parse_cookie(nil), do: []
 end
