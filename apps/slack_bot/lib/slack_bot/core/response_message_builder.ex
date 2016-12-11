@@ -23,7 +23,9 @@ defmodule SlackBot.Core.ResponseMessageBuilder do
     already_in_training: "Hm... It's likely you are already in training mode...",
     no_words_for_training: "Unfortunately, you do not have some words for training :-(",
     take_a_word_for_training: "Okay, cowboy, that is your word for training: `${word}`",
-    updated_dictionary_successfuly: "Your dictionary has been updated successfuly!"
+    updated_dictionary_successfuly: "Your dictionary has been updated successfuly!",
+    you_are_no_longer_signed_in: "Looks like you are no longer signed in... Please make sign in procedure again!",
+    unexpected_error: "Some unexpected error was occured. Please try again!"
   }
   
   @doc """
