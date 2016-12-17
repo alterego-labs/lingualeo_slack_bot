@@ -47,6 +47,13 @@ defmodule SlackBot.Resolver do
     end
     send_message_back(message_reason, income_message)
   end
+  def call(%CurrentUserState{is_signed_in: true, is_in_training: false}, %IncomeMessage{type: :answer} = income_message) do
+    send_message_back(:not_in_training, income_message)
+  end
+
+  def call(_current_user_state, income_message) do
+    send_message_back(:under_construction, income_message)
+  end
 
   defp send_message_back(reason, %IncomeMessage{} = income_message, opts \\ []) do
     channel_identifier = IncomeMessage.channel(income_message)

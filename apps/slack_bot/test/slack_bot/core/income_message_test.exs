@@ -4,7 +4,7 @@ defmodule SlackBot.Core.IncomeMessageTest do
   alias SlackBot.Core.IncomeMessage
 
   setup_all do
-    raw_message = %SlackBot.Core.IncomeMessage{
+    income_message = %SlackBot.Core.IncomeMessage{
       message: %{
         channel: "channel_id",
         team: "team_id",
@@ -26,19 +26,19 @@ defmodule SlackBot.Core.IncomeMessageTest do
         }
       }
     }
-    {:ok, %{raw_message: raw_message}}
+    {:ok, %{income_message: income_message}}
   end
 
   test "build initializes new struct with a type" do
-    raw_message = IncomeMessage.build(%{text: "Give me a word"}, %{})
-    assert %IncomeMessage{} = raw_message
-    assert raw_message.type == :request_word
+    income_message = IncomeMessage.build(%{text: "Give me a word"}, %{})
+    assert %IncomeMessage{} = income_message
+    assert income_message.type == :request_word
   end
 
   test "build inits struct with a proper type when income message tells to update dictionary" do
-    raw_message = IncomeMessage.build(%{text: "Update dictionary"}, %{})
-    assert %IncomeMessage{} = raw_message
-    assert raw_message.type == :update_dictionary
+    income_message = IncomeMessage.build(%{text: "Update dictionary"}, %{})
+    assert %IncomeMessage{} = income_message
+    assert income_message.type == :update_dictionary
   end
 
   test "build cleans up a message from mailto" do
@@ -47,25 +47,25 @@ defmodule SlackBot.Core.IncomeMessageTest do
     assert text == "Sign in me by sergeg1990@gmail.com and somepassword"
   end
 
-  test "slack_users returns list of users", %{raw_message: raw_message} do
-    users = IncomeMessage.slack_users(raw_message)
+  test "slack_users returns list of users", %{income_message: income_message} do
+    users = IncomeMessage.slack_users(income_message)
     assert is_map(users)
     assert Map.has_key?(users, "user_id")
   end
 
-  test "sender returns information about message writer", %{raw_message: raw_message} do
-    sender = IncomeMessage.sender(raw_message)
+  test "sender returns information about message writer", %{income_message: income_message} do
+    sender = IncomeMessage.sender(income_message)
     assert is_map(sender)
     assert Map.has_key?(sender, :name)
   end
 
-  test "text returns original message text", %{raw_message: raw_message} do
-    message_text = IncomeMessage.text(raw_message)
+  test "text returns original message text", %{income_message: income_message} do
+    message_text = IncomeMessage.text(income_message)
     assert message_text == "hi!"
   end
 
-  test "channel returns channel id", %{raw_message: raw_message} do
-    channel_id = IncomeMessage.channel(raw_message)
+  test "channel returns channel id", %{income_message: income_message} do
+    channel_id = IncomeMessage.channel(income_message)
     assert channel_id == "channel_id"
   end
 

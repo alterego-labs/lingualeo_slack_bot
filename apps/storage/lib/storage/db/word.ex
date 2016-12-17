@@ -6,6 +6,8 @@ defmodule Storage.DB.Word do
   use Ecto.Schema
   import Ecto.Query
 
+  @type external_id :: String.t | integer
+
   schema "words" do
     field :external_id, :string
     field :value, :string
@@ -32,8 +34,15 @@ defmodule Storage.DB.Word do
   @doc """
   Scope to filter words by a given `external_id`
   """
-  @spec with_external_id(Ecto.Queryable.t, String.t) :: Ecto.Queryable.t
-  def with_external_id(query, external_id) do
+  @spec with_external_id(Ecto.Queryable.t, external_id) :: Ecto.Queryable.t
+  def with_external_id(query, external_id) when is_bitstring(external_id) do
+    do_with_external_id(query, external_id)
+  end
+  def with_external_id(query, external_id) when is_number(external_id) do
+    do_with_external_id(query, to_string(external_id))
+  end
+
+  defp do_with_external_id(query, external_id) do
     from w in query,
     where: w.external_id == ^external_id
   end

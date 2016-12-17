@@ -19,4 +19,13 @@ defmodule Storage.DB.WordTest do
                   |> Repo.all
     assert Enum.count(collection) == 1
   end
+
+  test "with_external_id when external id is a number filters words by a given external ID value" do
+    external_id = 12345
+    user = :user |> create |> with_word([external_id: to_string(external_id)])
+    collection = Word
+                  |> Word.with_external_id(external_id)
+                  |> Repo.all
+    assert Enum.count(collection) == 1
+  end
 end
