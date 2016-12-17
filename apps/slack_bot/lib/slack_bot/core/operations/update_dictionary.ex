@@ -1,4 +1,4 @@
-defmodule SlackBot.Operations.UpdateDictionary do
+defmodule SlackBot.Core.Operations.UpdateDictionary do
   @moduledoc """
   Makes update dictionary operation to the Lingualeo API
   """
@@ -6,6 +6,8 @@ defmodule SlackBot.Operations.UpdateDictionary do
   alias SlackBot.Core.{IncomeMessage}
   alias Storage.DB.{User, Repo, Word, WordTraining}
   alias LingualeoGateway.Core.UserDict
+
+  @offset 400
 
   @doc """
   Calls sign in operation
@@ -23,16 +25,17 @@ defmodule SlackBot.Operations.UpdateDictionary do
 
   defp fetch_words(user_login) do
     user = Storage.API.user_by_login(user_login)
-    cookie = User.parse_cookie(user.cookie)
-    do_fetch_words(cookie, 400, [])
+    cookie = User.parse_cookie(user.cookies)
+    do_fetch_words(cookie, @offset, [])
   end
 
   defp do_fetch_words(cookie, offset, words) do
     case LingualeoGateway.API.get_userdict(cookie, offset) do
       {:ok, %UserDict{} = user_dict} ->
+        new_words = words ++ user_dict.words
         case user_dict.has_more do
-          true -> do_fetch_words(cookie, offset + 400, words ++ user_dict.words)
-          false -> {:ok, words}
+          true -> do_fetch_words(cookie, offset + @offset, new_words)
+          false -> {:ok, new_words}
         end
       {:error, reason} -> {:error, reason}
     end
@@ -49,9 +52,9 @@ defmodule SlackBot.Operations.UpdateDictionary do
 
   defp make_word_record_from_map(word_map) do
     %Word{
-      external_id:   Map.get(word_map, :word_id),
+      external_id:   word_map |> Map.get(:word_id) |> to_string,
       value:         Map.get(word_map, :word_value),
-      translation:   Map.get(word_map, :translation),
+      translation:   Map.get(word_map, :translate_value),
       transcription: Map.get(word_map, :transcription),
       sound_url:     Map.get(word_map, :sound_url),
       pic_url:       Map.get(word_map, :pic_url),

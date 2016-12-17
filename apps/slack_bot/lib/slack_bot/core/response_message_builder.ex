@@ -22,10 +22,12 @@ defmodule SlackBot.Core.ResponseMessageBuilder do
     invalid_credentials: "Credentials which were provided by you aren't correct!",
     already_in_training: "Hm... It's likely you are already in training mode...",
     no_words_for_training: "Unfortunately, you do not have some words for training :-(",
-    take_a_word_for_training: "Okay, cowboy, that is your word for training: `${word}`",
+    take_a_word_for_training: "Okay, cowboy, that is your word for training: `%{word}`",
     updated_dictionary_successfuly: "Your dictionary has been updated successfuly!",
     you_are_no_longer_signed_in: "Looks like you are no longer signed in... Please make sign in procedure again!",
-    unexpected_error: "Some unexpected error was occured. Please try again!"
+    unexpected_error: "Some unexpected error was occured. Please try again!",
+    not_in_training: "Hm... Looks like you provide an answer, but you aren't in training mode. So start it first!",
+    under_construction: "Man, you've been catched into some case logic which is not implemented yet. Sorry :-)"
   }
   
   @doc """
