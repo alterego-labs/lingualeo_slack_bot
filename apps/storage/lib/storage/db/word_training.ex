@@ -28,12 +28,21 @@ defmodule Storage.DB.WordTraining do
   end
 
   @doc """
-  Scope to filter word trinings by *in_progress* status
+  Scope to filter word tranings by *in_progress* status
   """
   @spec with_in_progress_status(Ecto.Queryable.t) :: Ecto.Queryable.t
   def with_in_progress_status(query) do
     from wt in query,
     where: wt.status == "in_progress"
+  end
+
+  @doc """
+  Scope to filter word trainings by *word_id* value
+  """
+  @spec with_word_id(Ecto.Queryable.t, integer) :: Ecto.Queryable.t
+  def with_word_id(query, word_id) do
+    from wt in query,
+    where: wt.word_id == ^word_id
   end
 
   @doc """
