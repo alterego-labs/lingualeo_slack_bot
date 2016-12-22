@@ -25,6 +25,13 @@ defmodule Storage.Factory do
     }
   end
 
+  def factory(:word_training_in_progress) do
+    %WordTraining{
+      word: create(:word),
+      status: "in_progress"
+    }
+  end
+
   def with_word(%User{} = user, opts \\ []) do
     word_opts = Keyword.merge([user: user], opts)
     create(:word, word_opts)

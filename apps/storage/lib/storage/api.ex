@@ -133,6 +133,63 @@ defmodule Storage.API do
     end
   end
 
+  @doc """
+  Provides information about user's training word.
+  """
+  @spec get_training_word(user_login) :: {:ok, Word.t} | {:error, :no_words_in_training}
+  def get_training_word(user_login) do
+    user = user_by_login(user_login)
+    case fetch_word_training(user) do
+      %WordTraining{} = word_training ->
+        word_training = Repo.preload(word_training, :word, [force: true])
+        {:ok, word_training.word}
+      nil -> {:error, :no_words_in_training}
+    end
+  end
+
+  @doc """
+  Marks a training for the given word as successful.
+  """
+  @spec mark_training_success(user_login, integer) :: :ok | {:error, :no_words_in_training}
+  def mark_training_success(user_login, word_id) do
+    user = user_by_login(user_login)
+    # TODO: What about if there are several trainings for the single word?     
+    word_training = WordTraining
+                    |> WordTraining.for_user(user)
+                    |> WordTraining.with_word_id(word_id)
+                    |> WordTraining.with_in_progress_status
+                    |> Repo.one
+    case word_training do
+      %WordTraining{} = word_training ->
+        word_training = Ecto.Changeset.change word_training, status: "completed"
+        Repo.update(word_training)
+        :ok
+      nil -> {:error, :no_words_in_training}
+    end
+  end
+
+  @doc """
+  Increments a number of attempts which were needed to complete a training for a given word
+  """
+  @spec inc_training_attempts(user_login, integer) :: :ok | {:error, :no_words_in_training}
+  def inc_training_attempts(user_login, word_id) do
+    user = user_by_login(user_login)
+    # TODO: What about if there are several trainings for the single word?     
+    word_training = WordTraining
+                    |> WordTraining.for_user(user)
+                    |> WordTraining.with_word_id(word_id)
+                    |> WordTraining.with_in_progress_status
+                    |> Repo.one
+    case word_training do
+      %WordTraining{} = word_training ->
+        new_attempts_count = word_training.attempts_to_success + 1
+        word_training = Ecto.Changeset.change word_training, attempts_to_success: new_attempts_count
+        Repo.update(word_training)
+        :ok
+      nil -> {:error, :no_words_in_training}
+    end
+  end
+
   defp has_word_with_external_id?(user, external_id) do
     words = Word
             |> Word.for_user(user)
@@ -161,5 +218,12 @@ defmodule Storage.API do
 
   defp not_nil?(value) do
     !is_nil(value)
+  end
+
+  defp fetch_word_training(user) do
+    WordTraining
+    |> WordTraining.for_user(user)
+    |> WordTraining.with_in_progress_status
+    |> Repo.one
   end
 end
