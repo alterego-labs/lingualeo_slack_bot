@@ -27,7 +27,9 @@ defmodule SlackBot.Core.ResponseMessageBuilder do
     you_are_no_longer_signed_in: "Looks like you are no longer signed in... Please make sign in procedure again!",
     unexpected_error: "Some unexpected error was occured. Please try again!",
     not_in_training: "Hm... Looks like you provide an answer, but you aren't in training mode. So start it first!",
-    under_construction: "Man, you've been catched into some case logic which is not implemented yet. Sorry :-)"
+    under_construction: "Man, you've been catched into some case logic which is not implemented yet. Sorry :-)",
+    correct_answer: "Yay! Your answer is correct! Move forward and try new training!",
+    invalid_answer: "Unfortunately, your answer isn't correct..."
   }
   
   @doc """

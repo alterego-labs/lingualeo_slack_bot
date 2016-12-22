@@ -47,10 +47,18 @@ defmodule SlackBot.Resolver do
     end
     send_message_back(message_reason, income_message)
   end
+  def call(%CurrentUserState{is_signed_in: true, is_in_training: true}, %IncomeMessage{type: :answer} = income_message) do
+    operation_result = Operations.ProcessAnswer.call(income_message)
+    message_reason = case operation_result do
+      :ok -> :correct_answer
+      {:error, :no_words_for_training} -> :not_in_training
+      {:error, :invalid_answer} -> :invalid_answer
+    end
+    send_message_back(message_reason, income_message)
+  end
   def call(%CurrentUserState{is_signed_in: true, is_in_training: false}, %IncomeMessage{type: :answer} = income_message) do
     send_message_back(:not_in_training, income_message)
   end
-
   def call(_current_user_state, income_message) do
     send_message_back(:under_construction, income_message)
   end
